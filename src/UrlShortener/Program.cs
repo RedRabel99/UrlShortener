@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Sqids;
 using UrlShortener.Abstractions.Endpoints;
+using UrlShortener.Features.ShortenUrl;
 using UrlShortener.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -15,14 +15,28 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddEndpoints(typeof(Program).Assembly);
 
+builder.Services.AddScoped<ShortenUrlHandler>();
+
+builder.Services.Configure<ShortUrlOptions>(
+    builder.Configuration.GetSection(ShortUrlOptions.SectionName));
+
+var sqidsAlphabet = builder.Configuration["Sqids:Alphabet"]
+    ?? throw new InvalidOperationException("No sqids alphabet provided");
+
+builder.Services.AddSingleton(new SqidsEncoder<long>(new SqidsOptions
+{
+    Alphabet = sqidsAlphabet,
+    MinLength = 7
+}));
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-app.MapEndpoints();
+
 app.UseHttpsRedirection();
+app.MapEndpoints();
 
 app.Run();

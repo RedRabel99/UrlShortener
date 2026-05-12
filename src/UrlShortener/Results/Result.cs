@@ -1,4 +1,4 @@
-﻿namespace UrlShortener.Results;
+namespace UrlShortener.Results;
 
 public record Result
 {
@@ -8,13 +8,13 @@ public record Result
 
     protected Result(bool isSuccess, Error error)
     {
-        if(isSuccess && error != Error.None)
+        if (isSuccess && error != Error.None)
         {
-            throw new ArgumentException("Successfull result cant have an error", nameof(error));
+            throw new ArgumentException("Successful result cannot have an error", nameof(error));
         }
-        if(!isSuccess && error == Error.None)
+        if (!isSuccess && error == Error.None)
         {
-            throw new ArgumentException("Fauilure error cant be none", nameof(error));
+            throw new ArgumentException("Failure result must have an error", nameof(error));
         }
         IsSuccess = isSuccess;
         Error = error;
@@ -26,13 +26,13 @@ public record Result
 
 public record Result<TValue> : Result
 {
-    TValue Value { get; }
+    public TValue Value { get; }
 
-    public Result(bool isSuccess, TValue value, Error error) : base(isSuccess, error)
+    private Result(bool isSuccess, TValue value, Error error) : base(isSuccess, error)
     {
-            Value = value;
+        Value = value;
     }
 
     public static Result<TValue> Success(TValue value) => new(true, value, Error.None);
-    public static Result<TValue> Failure(Error error) => new(false, default!, error);
+    public static new Result<TValue> Failure(Error error) => new(false, default!, error);
 }

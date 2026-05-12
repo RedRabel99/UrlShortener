@@ -1,8 +1,8 @@
-﻿namespace UrlShortener.Domain;
+namespace UrlShortener.Domain;
 
 public class Url
 {
     public Guid Id { get; set; }
-    public string LongUrl { get; set; }
-    public string ShortUrl { get; set; }
+    public required string LongUrl { get; set; }
+    public required string ShortUrl { get; set; }
 }
