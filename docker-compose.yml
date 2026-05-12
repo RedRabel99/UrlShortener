@@ -1,0 +1,21 @@
+services:
+
+  db:
+    image: postgres:16-alpine
+    container_name: url-shortener-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: url-shortener-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - url_shortener_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres url-shortener-db"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+volumes:
+  url_shortener_db_data:
