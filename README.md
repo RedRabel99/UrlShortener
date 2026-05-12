@@ -8,3 +8,5 @@ Minimal-API URL shortener built on **ASP.NET Core (.NET 10)** with **EF Core 10 
 - EF Core 10 (`Npgsql.EntityFrameworkCore.PostgreSQL`)
 - PostgreSQL 16 (Docker Compose for local dev)
 - Sqids for short-code encoding
+## TODO
+- Implement reading by Query and Query Handler.
