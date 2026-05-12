@@ -1,7 +1,3 @@
-﻿namespace UrlShortener.Features.ShortenUrl
-{
-    internal class ShortenUrlRequest
-    {
-        public required string LongUrl { get; set; }
-    }
-}
+namespace UrlShortener.Features.ShortenUrl;
+
+public sealed record ShortenUrlRequest(string LongUrl);

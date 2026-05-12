@@ -1,17 +1,25 @@
-﻿using UrlShortener.Abstractions.Endpoints;
+using UrlShortener.Abstractions.Endpoints;
+using UrlShortener.Results;
 
 namespace UrlShortener.Features.ShortenUrl;
 
-public class ShortenUrlEndpoint : IEndpoint
+public sealed class ShortenUrlEndpoint : IEndpoint
 {
-    public void MapEndpoint(IEndpointRouteBuilder builder) =>
-        builder.MapPost("/shorten", async (
+    public void MapEndpoint(IEndpointRouteBuilder app) =>
+        app.MapPost("/shorten", async Task<IResult> (
             ShortenUrlRequest request,
             ShortenUrlHandler handler,
             CancellationToken ct) =>
         {
-            var cmd = new ShortenUrlCommand(request.LongUrl);
+            var result = await handler.Handle(new ShortenUrlCommand(request.LongUrl), ct);
+            if (!result.IsSuccess)
+            {
+                return result.ToProblemDetails();
+            }
 
-            var result = await handler.Handle(cmd, ct);
+            var body = new { shortUrl = result.Value.Url };
+            return result.Value.WasCreated
+                ? TypedResults.Created(result.Value.Url, body)
+                : TypedResults.Ok(body);
         });
 }
