@@ -24,10 +24,4 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\ShortenUrl\" />
-    <Folder Include="Messaging\" />
-    <Folder Include="Results\" />
-  </ItemGroup>
-
 </Project>
