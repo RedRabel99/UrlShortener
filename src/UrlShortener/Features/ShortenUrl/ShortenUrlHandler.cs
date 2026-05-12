@@ -11,7 +11,7 @@ public sealed class ShortenUrlHandler(AppDbContext context) : ICommandHandler<Sh
     {
         var url = new Url
         {
-            ShortUrl = ,
+            ShortUrl = "short",
             LongUrl = command.LongUrl
         };
 
