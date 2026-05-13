@@ -3,7 +3,7 @@ using UrlShortener.Results;
 
 namespace UrlShortener.Features.GetLinkByCode;
 
-public sealed class GetLinkByQueryEndpoint : IEndpoint
+public sealed class GetLinkByCodeEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
