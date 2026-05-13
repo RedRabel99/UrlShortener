@@ -2,7 +2,7 @@ using UrlShortener.Results;
 
 namespace UrlShortener.Features.ShortenUrl;
 
-internal static class ShortenUrlErrors
+public static class ShortenUrlErrors
 {
     public static readonly Error Empty =
         Error.Validation("ShortenUrl.Empty", "URL must not be empty.");
