@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Sqids;
 using UrlShortener.Abstractions.Endpoints;
+using UrlShortener.Features.GetLinkByCode;
 using UrlShortener.Features.ShortenUrl;
 using UrlShortener.Infrastructure;
 
@@ -16,7 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddEndpoints(typeof(Program).Assembly);
 
 builder.Services.AddScoped<ShortenUrlHandler>();
-
+builder.Services.AddScoped<GetLinkByCodeQueryHandler>();
 builder.Services.Configure<ShortUrlOptions>(
     builder.Configuration.GetSection(ShortUrlOptions.SectionName));
 

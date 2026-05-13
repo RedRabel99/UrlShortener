@@ -72,10 +72,10 @@ public sealed class ShortenUrlHandler(
     private static Error? Validate(string longUrl)
     {
         //use manual validation for now
-        if (string.IsNullOrWhiteSpace(longUrl)) return UrlErrors.Empty;
-        if (longUrl.Length > 2048) return UrlErrors.TooLong;
-        if (!Uri.TryCreate(longUrl, UriKind.Absolute, out var uri)) return UrlErrors.Unparseable;
-        if (uri.Scheme is not ("http" or "https")) return UrlErrors.InvalidScheme;
+        if (string.IsNullOrWhiteSpace(longUrl)) return ShortenUrlErrors.Empty;
+        if (longUrl.Length > 2048) return ShortenUrlErrors.TooLong;
+        if (!Uri.TryCreate(longUrl, UriKind.Absolute, out var uri)) return ShortenUrlErrors.Unparseable;
+        if (uri.Scheme is not ("http" or "https")) return ShortenUrlErrors.InvalidScheme;
         return null;
     }
 
