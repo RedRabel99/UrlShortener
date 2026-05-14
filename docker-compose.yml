@@ -36,5 +36,20 @@ services:
     ports:
       - "8080:8080"
 
+  redis:
+    image: redis:7-alpine
+    container_name: url-shortener-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
 volumes:
   url_shortener_db_data:
+  redis_data:
