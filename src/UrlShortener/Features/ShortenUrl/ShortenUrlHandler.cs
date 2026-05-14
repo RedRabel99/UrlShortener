@@ -16,6 +16,7 @@ public sealed class ShortenUrlHandler(
     ILogger<ShortenUrlHandler> logger)
     : ICommandHandler<ShortenUrlCommand, Result<ShortenUrlResult>>
 {
+    private readonly AppDbContext _context = context;
     private readonly string _baseUrl = options.Value.BaseUrl.TrimEnd('/');
 
     public async Task<Result<ShortenUrlResult>> Handle(ShortenUrlCommand command, CancellationToken ct)
@@ -26,7 +27,7 @@ public sealed class ShortenUrlHandler(
             return Result<ShortenUrlResult>.Failure(validation);
         }
 
-        var existing = await context.Urls
+        var existing = await _context.Urls
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.LongUrl == command.LongUrl, ct);
         if (existing is not null)
@@ -35,7 +36,7 @@ public sealed class ShortenUrlHandler(
                 new ShortenUrlResult(BuildUrl(existing.ShortUrl), WasCreated: false));
         }
 
-        var sequenceValue = await context.Database
+        var sequenceValue = await _context.Database
             .SqlQuery<long>($"SELECT nextval('url_short_seq') AS \"Value\"") //adding alias cause sqlquery expects column named value
             .SingleAsync(ct);
         var slug = sqids.Encode(sequenceValue);
@@ -45,23 +46,23 @@ public sealed class ShortenUrlHandler(
             LongUrl = command.LongUrl,
             ShortUrl = slug
         };
-        context.Urls.Add(entity);
+        _context.Urls.Add(entity);
 
         try
         {
-            await context.SaveChangesAsync(ct);
+            await _context.SaveChangesAsync(ct);
             logger.LogInformation("Shortened {LongUrl} to {Slug}", command.LongUrl, slug);
             return Result<ShortenUrlResult>.Success(
                 new ShortenUrlResult(BuildUrl(slug), WasCreated: true));
         }
         catch (DbUpdateException ex) when (ex.InnerException is PostgresException { SqlState: "23505" })
         {
-            context.Entry(entity).State = EntityState.Detached;
+            _context.Entry(entity).State = EntityState.Detached;
 
             logger.LogWarning(
                 "Concurrent shorten for {LongUrl}; returning the existing row", command.LongUrl);
 
-            var existingUrl = await context.Urls
+            var existingUrl = await _context.Urls
                 .AsNoTracking()
                 .SingleAsync(u => u.LongUrl == command.LongUrl, ct);
             return Result<ShortenUrlResult>.Success(
@@ -72,10 +73,10 @@ public sealed class ShortenUrlHandler(
     private static Error? Validate(string longUrl)
     {
         //use manual validation for now
-        if (string.IsNullOrWhiteSpace(longUrl)) return UrlErrors.Empty;
-        if (longUrl.Length > 2048) return UrlErrors.TooLong;
-        if (!Uri.TryCreate(longUrl, UriKind.Absolute, out var uri)) return UrlErrors.Unparseable;
-        if (uri.Scheme is not ("http" or "https")) return UrlErrors.InvalidScheme;
+        if (string.IsNullOrWhiteSpace(longUrl)) return ShortenUrlErrors.Empty;
+        if (longUrl.Length > 2048) return ShortenUrlErrors.TooLong;
+        if (!Uri.TryCreate(longUrl, UriKind.Absolute, out var uri)) return ShortenUrlErrors.Unparseable;
+        if (uri.Scheme is not ("http" or "https")) return ShortenUrlErrors.InvalidScheme;
         return null;
     }
 
