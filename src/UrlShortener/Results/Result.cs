@@ -24,7 +24,7 @@ public record Result
     public static Result Failure(Error error) => new(false, error);
 }
 
-public record Result<TValue> : Result
+public sealed record Result<TValue> : Result
 {
     public TValue Value { get; }
 

@@ -12,7 +12,7 @@ public static class ResultExtensions
         return TypedResults.Problem(
             statusCode: GetStatusCode(result.Error.Type),
             title: GetTitle(result.Error.Type),
-            type: GetType(result.Error.Type),
+            type: GetErrorType(result.Error.Type),
             detail: result.Error.Description,
             extensions: new Dictionary<string, object?>
             {
@@ -42,7 +42,7 @@ public static class ResultExtensions
             _ => "Server Error"
         };
 
-    private static string GetType(ErrorType errorType) =>
+    private static string GetErrorType(ErrorType errorType) =>
         errorType switch
         {
             ErrorType.Validation => "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1",

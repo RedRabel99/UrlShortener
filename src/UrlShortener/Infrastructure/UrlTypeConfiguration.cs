@@ -4,7 +4,7 @@ using UrlShortener.Domain;
 
 namespace UrlShortener.Infrastructure;
 
-public class UrlTypeConfiguration : IEntityTypeConfiguration<Url>
+public sealed class UrlTypeConfiguration : IEntityTypeConfiguration<Url>
 {
     public void Configure(EntityTypeBuilder<Url> builder)
     {

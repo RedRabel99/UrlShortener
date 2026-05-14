@@ -37,7 +37,7 @@ public sealed class ShortenUrlHandler(
         }
 
         var sequenceValue = await _context.Database
-            .SqlQuery<long>($"SELECT nextval('url_short_seq') AS \"Value\"") //adding alias cause sqlquery expects column named value
+            .SqlQuery<long>($"SELECT nextval('url_short_seq') AS \"Value\"") //adding alias because SQLQuery expects column named value
             .SingleAsync(ct);
         var slug = sqids.Encode(sequenceValue);
 

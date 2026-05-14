@@ -32,7 +32,7 @@ services:
       ASPNETCORE_HTTP_PORTS: 8080
       ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=url-shortener-db;Username=postgres;Password=postgres"
       ShortUrl__BaseUrl: "http://localhost:8080"
-      Sqids__Alphabet: ${SQIDS_ALPHABET}
+      Sqids__Alphabet: ${SQIDS_ALPHABET:?SQIDS_ALPHABET required}
     ports:
       - "8080:8080"
 

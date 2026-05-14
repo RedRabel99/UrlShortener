@@ -7,7 +7,7 @@ public sealed class AppDbContext : DbContext
 {
     public const string ShortUrlSequenceName = "url_short_seq";
 
-    public DbSet<Url> Urls { get; set; }
+    public DbSet<Url> Urls { get; set; } = null!;
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {

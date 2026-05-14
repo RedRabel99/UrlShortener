@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace UrlShortener.Abstractions.Endpoints;
 
-public static  class EndpointExtensions
+public static class EndpointExtensions
 {
     public static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)
     {
@@ -21,7 +21,7 @@ public static  class EndpointExtensions
     {
         IEnumerable<IEndpoint> endpoints = app.Services
             .GetRequiredService<IEnumerable<IEndpoint>>();
-       
+        
         foreach(var endpoint in endpoints)
         {
             endpoint.MapEndpoint(app);

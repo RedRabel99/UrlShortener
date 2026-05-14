@@ -370,5 +370,5 @@ FodyWeavers.xsd
 .claude/
 CLAUDE.md
 CLAUDE.local.md
+CONTEXT.md
 /docs/adr
-*.md

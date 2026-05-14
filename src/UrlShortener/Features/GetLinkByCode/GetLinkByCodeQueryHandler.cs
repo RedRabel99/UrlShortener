@@ -11,9 +11,9 @@ public sealed class GetLinkByCodeQueryHandler(AppDbContext context) : IQueryHand
 
     public async Task<Result<GetLinkByCodeQueryResult>> Handle(GetLinkByCodeQuery query, CancellationToken cancellationToken)
     {
-        var result = await _context.Urls.FirstOrDefaultAsync(x => x.ShortUrl == query.Code, cancellationToken);
-
-        if(result is null)
+        var result = await _context.Urls.AsNoTracking().FirstOrDefaultAsync(x => x.ShortUrl == query.Code, cancellationToken);
+        
+        if (result is null)
         {
             return Result<GetLinkByCodeQueryResult>.Failure(GetLinkByCodeErrors.NotFound);
         }
