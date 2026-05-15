@@ -13,7 +13,7 @@ services:
     volumes:
       - url_shortener_db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres url-shortener-db"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d url-shortener-db"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -27,10 +27,13 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_HTTP_PORTS: 8080
-      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=url-shortener-db;Username=postgres;Password=postgres"
+      ConnectionStrings__DefaultDbConnection: "Host=db;Port=5432;Database=url-shortener-db;Username=postgres;Password=postgres"
+      ConnectionStrings__RedisConnection: "redis:6379"
       ShortUrl__BaseUrl: "http://localhost:8080"
       Sqids__Alphabet: ${SQIDS_ALPHABET:?SQIDS_ALPHABET required}
     ports:
